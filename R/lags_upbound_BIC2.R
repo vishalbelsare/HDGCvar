@@ -17,7 +17,7 @@ lags_upbound_BIC2 <- function(data,p_max=10){
   for (k in 1:K) {
     ylags <- create_lags(data[, k], p = p_max, include.original = TRUE, trim = TRUE) #create p_max lags
     for (p in 1:p_max) {
-      res <- ols(ylags[, 1], ylags[, 2:(i + 1)])$resid
+      res <- ols(ylags[, 1], ylags[, 2:(p + 1)])$resid
       sigma2[k, p] <- mean(res^2)
     }
   }
