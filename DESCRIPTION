@@ -18,7 +18,6 @@ Encoding: UTF-8
 LazyData: true
 URL: https://github.com/Marga8/HDGCvar
 BugReports: https://github.com/Marga8/HDGCvar/issues
-RoxygenNote: 7.3.1
 Imports: 
     APFr,
     glmnet,
@@ -35,3 +34,4 @@ Suggests:
 VignetteBuilder: knitr
 Depends: 
     R (>= 2.10)
+Config/roxygen2/version: 8.0.0
