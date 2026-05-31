@@ -8,11 +8,18 @@
 #' @examples  lags_upbound_BIC2(sample_dataset_I1, p_max=10)
 #' @references Hecq, A., Margaritella, L., Smeekes, S., "Inference in Non Stationary High Dimensional VARs" (2020, check the latest version at https://sites.google.com/view/luca-margaritella )
 #' @references Hecq, A., Margaritella, L., Smeekes, S., "Granger Causality Testing in High-Dimensional VARs: a Post-Double-Selection Procedure." arXiv preprint arXiv:1902.10991 (2019).
-lags_upbound_BIC2 <- function(data,p_max=10){
+lags_upbound <- function(data, p_max = 10, ic = "BIC"){
 
-  data<-as.matrix(data) #data
+  data <- as.matrix(data) #data
   n <- nrow(data)
   K <- ncol(data) #numb of variables
+
+  if (ic == "BIC") {
+    penalty <- log(n)
+  } else if (ic == "AIC") {
+    penalty <- 2
+  }
+
   sigma2 <- matrix(nrow = K, ncol = p_max)
   for (k in 1:K) {
     ylags <- create_lags(data[, k], p = p_max, include.original = TRUE, trim = TRUE) #create p_max lags
@@ -21,8 +28,8 @@ lags_upbound_BIC2 <- function(data,p_max=10){
       sigma2[k, p] <- mean(res^2)
     }
   }
-  sigma_sums <- colSums(sigma2)
-  BIC <- log(sigma_sums) + log(n) * (1:p_max) * K / n
+  sigma_logsums <- colSums(log(sigma2))
+  BIC <- sigma_logsums + penalty * (1:p_max) * K / n
   Best <- which.min(BIC)
   return(Best)
 }
