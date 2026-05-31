@@ -10,6 +10,8 @@ lags_upbound(data, p_max = 10, ic = "BIC")
 \item{data}{a dataframe or matrix of the original set of time series forming the VAR}
 
 \item{p_max}{maximum lag length to consider, default is 10}
+
+\item{ic}{information criterion to use, can be "BIC" (default) or "AIC"}
 }
 \value{
 returns the estimated lag length upper bound
@@ -20,7 +22,7 @@ the diagonalized VAR are used to build the empirical covariance matrix and an ap
 its determinant that uses the matrix trace is employed to be able to select p using Bayesian Information Criterion
 }
 \examples{
- lags_upbound_BIC2(sample_dataset_I1, p_max=10)
+ lags_upbound(sample_dataset_I1, p_max=10)
 }
 \references{
 Hecq, A., Margaritella, L., Smeekes, S., "Inference in Non Stationary High Dimensional VARs" (2020, check the latest version at https://sites.google.com/view/luca-margaritella )

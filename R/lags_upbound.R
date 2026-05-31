@@ -4,8 +4,9 @@
 #' its determinant that uses the matrix trace is employed to be able to select p using Bayesian Information Criterion
 #' @param data a dataframe or matrix of the original set of time series forming the VAR
 #' @param p_max maximum lag length to consider, default is 10
+#' @param ic information criterion to use, can be "BIC" (default) or "AIC"
 #' @return  returns the estimated lag length upper bound
-#' @examples  lags_upbound_BIC2(sample_dataset_I1, p_max=10)
+#' @examples  lags_upbound(sample_dataset_I1, p_max=10)
 #' @references Hecq, A., Margaritella, L., Smeekes, S., "Inference in Non Stationary High Dimensional VARs" (2020, check the latest version at https://sites.google.com/view/luca-margaritella )
 #' @references Hecq, A., Margaritella, L., Smeekes, S., "Granger Causality Testing in High-Dimensional VARs: a Post-Double-Selection Procedure." arXiv preprint arXiv:1902.10991 (2019).
 lags_upbound <- function(data, p_max = 10, ic = "BIC"){
