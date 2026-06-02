@@ -6,15 +6,16 @@
 #' @param  bound      lower bound on tuning parameter lambda
 #' @param  parallel   TRUE for parallel computing
 #' @param  n_cores    nr of cores to use in parallel computing, default is all but one
-#' @return            LM Chi-square test statistics (asymptotic), LM F-stat with finite sample correction, LM Chi-square (asymptotic) with heteroscedasticity correction, all with their corresponding p-value.
-#' Lasso selections are also printed to the console.
+#' @param store_selections store the lasso-selected variables, default is true
+#' @return            LM Chi-square test statistic (asymptotic), LM F-stat with finite sample correction, LM Chi-square (asymptotic) with heteroscedasticity correction, all with their corresponding p-value.
+#' Lasso selections are also given if `store_selections = TRUE` (`NULL` otherwise).
 #' @export
 #' @importFrom parallel makeCluster clusterSetRNGStream clusterExport clusterEvalQ detectCores parSapply stopCluster parLapply
 #' @examples \dontrun{HDGC_HVAR_RVCOV(GCpair=list("GCto"="Var 1", "GCfrom"="Var 2"), real_var, real_corr)}
 #' @references Hecq, A., Margaritella, L., Smeekes, S., "Granger Causality Testing in High-Dimensional VARs: a Post-Double-Selection Procedure." arXiv preprint arXiv:1902.10991 (2019).
 #' @references  Corsi, Fulvio. "A simple approximate long-memory model of realized volatility." Journal of Financial Econometrics 7.2 (2009): 174-196.
 HDGC_HVAR_RVCOV <- function(GCpair, realized_variances, realized_correlations, bound = 0.5 * nrow(realized_variances),
-                            parallel = FALSE, n_cores = NULL) {
+                            parallel = FALSE, n_cores = NULL, store_selections = TRUE) {
   p = 3 #impose Three lags (HVAR)
 
   GCto <- GCpair$GCto #Granger-caused variable
@@ -102,5 +103,10 @@ HDGC_HVAR_RVCOV <- function(GCpair, realized_variances, realized_correlations, b
 
   # Perform LM test
   LM_out <- LM_test_robust(y_I, diag(I) %x% X_GC, Zx_sel, I) #dep variable, Granger causing original p lags, selected variables
+  if (store_selections) {
+    select_out <- lasso_sel
+  } else {
+    select_out <- NULL
+  }
   return(list(tests = LM_out, selections = lasso_sel))
 }

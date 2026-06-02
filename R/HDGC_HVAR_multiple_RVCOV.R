@@ -9,15 +9,24 @@
 #' @param  bound      lower bound on tuning parameter lambda
 #' @param  parallel   TRUE for parallel computing
 #' @param  n_cores    nr of cores to use in parallel computing, default is all but one
-#' @return            LM test statistics, p-values (asymptotic and with finite sample correction) and Lasso selections are printed to the console
+#' @param progress_bar display a progress bar, default is true
+#' @param store_selections store the lasso-selected variables, default is false (object can become huge in large systems)
+#' @return            LM Chi-square test statistics (asymptotic), LM F-stats with finite sample correction, LM Chi-square (asymptotic) with heteroscedasticity correction, all with their corresponding p-value.
+#' Lasso selections are also given if `store_selections = TRUE` (`NULL` otherwise).
 #' @export
 #' @importFrom parallel makeCluster clusterSetRNGStream clusterExport clusterEvalQ detectCores parSapply stopCluster
 #' @examples \dontrun{ HDGC_HVAR_multiple_RVCOV(real_var, real_corr, GCpairs, log = TRUE)}
 #' @references Hecq, A., Margaritella, L., Smeekes, S., "Granger Causality Testing in High-Dimensional VARs: a Post-Double-Selection Procedure." arXiv preprint arXiv:1902.10991 (2019).
 #' @references  Corsi, Fulvio. "A simple approximate long-memory model of realized volatility." Journal of Financial Econometrics 7.2 (2009): 174-196.
 HDGC_HVAR_multiple_RVCOV <- function(realized_variances, realized_correlations, GCpairs, log = TRUE, bound = 0.5 * nrow(realized_variances),
-                                     parallel = FALSE, n_cores = NULL) {
+                                     parallel = FALSE, n_cores = NULL,
+                                     progress_bar = TRUE, store_selections = store_selections) {
 
+  if (progress_bar) {
+    pbapply::pboptions(type = "txt")
+  } else {
+    pbapply::pboptions(type = "none")
+  }
   if (parallel) {
     if (is.null(n_cores)) {
       n_cores <- detectCores() - 1
@@ -30,13 +39,18 @@ HDGC_HVAR_multiple_RVCOV <- function(realized_variances, realized_correlations, 
       library(zoo)
     })
 
-    test_list <- parLapply(cl, GCpairs, HDGC_HVAR_RVCOV, realized_variances=realized_variances,
-                           realized_correlations=realized_correlations,  bound = bound, parallel = FALSE)
+    test_list <- pbapply::pblapply(GCpairs, HDGC_HVAR_RVCOV,
+                                   realized_variances = realized_variances,
+                                   realized_correlations = realized_correlations,
+                                   bound = bound, parallel = FALSE,
+                                   store_selections = store_selection, cl = cl)
     stopCluster(cl)
   } else {
-    test_list <- lapply(GCpairs, HDGC_HVAR_RVCOV, realized_variances=realized_variances,
-                        realized_correlations=realized_correlations, bound = bound,
-                        parallel = FALSE)
+    test_list <- pbapply::pblapply(GCpairs, HDGC_HVAR_RVCOV,
+                                   realized_variances = realized_variances,
+                                   realized_correlations = realized_correlations,
+                                   bound = bound, parallel = FALSE,
+                                   store_selections = store_selections)
   }
   out <- simplify_list_RV(test_list, GCpairs)
   return(out)

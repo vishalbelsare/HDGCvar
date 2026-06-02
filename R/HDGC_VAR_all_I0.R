@@ -7,13 +7,17 @@
 #' @param  bound      lower bound on tuning parameter lambda
 #' @param  parallel   TRUE for parallel computing
 #' @param  n_cores    nr of cores to use in parallel computing, default is all but one
+#' @param progress_bar display a progress bar, default is true
+#' @param store_selections store the lasso-selected variables, default is false (object can become huge in large systems)
 #'
-#' @return            Granger causality matrix and Lasso selections are printed to the console
+#' @return            LM Chi-square test statistics (asymptotic) and LM F-stat with finite sample correction, with their corresponding p-value.
+#' Lasso selections are also given if `store_selections = TRUE` (`NULL` otherwise).
 #' @export
 #' @examples \dontrun{HDGC_VAR_all_I0(data=sample_dataset_I0,p=2,parallel=T)}
 #' @references Hecq, A., Margaritella, L., Smeekes, S., "Granger Causality Testing in High-Dimensional VARs: a Post-Double-Selection Procedure." arXiv preprint arXiv:1902.10991 (2019).
 HDGC_VAR_all_I0 <- function(data, p = 1,  bound = 0.5 * nrow(data),
-                            parallel = FALSE, n_cores = NULL) {
+                            parallel = FALSE, n_cores = NULL, progress_bar = TRUE,
+                            store_selections = FALSE) {
   varnames <- colnames(data)
   K <- ncol(data)
   GCpairs <- vector("list", length = K * (K - 1))
@@ -25,7 +29,8 @@ HDGC_VAR_all_I0 <- function(data, p = 1,  bound = 0.5 * nrow(data),
     }
   }
   GC_all_pairs <- HDGC_VAR_multiple_I0(data = data, GCpairs = GCpairs, p = p, bound = bound,
-                                       parallel = parallel, n_cores = n_cores)
+                                       parallel = parallel, n_cores = n_cores,
+                                       progress_bar = progress_bar, store_selections = store_selections)
   GC_matrix <- array(dim = c(K, K, 2, 2))
   dimnames(GC_matrix) <- list(GCto = varnames, GCfrom = varnames,
                               stat = c("LM_stat", "p_value"), type = c("Asymp", "FS_cor"))

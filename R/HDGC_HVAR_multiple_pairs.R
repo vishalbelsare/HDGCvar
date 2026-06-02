@@ -12,7 +12,10 @@
 #' @param  bound      lower bound on tuning parameter lambda
 #' @param  parallel   TRUE for parallel computing
 #' @param  n_cores    nr of cores to use in parallel computing, default is all but one
-#' @return            Granger causality matrix and Lasso selections are printed to the console
+#' @param progress_bar display a progress bar, default is true
+#' @param store_selections store the lasso-selected variables, default is false (object can become huge in large systems)
+#' @return            LM Chi-square test statistics (asymptotic), LM F-stats with finite sample correction, LM Chi-square (asymptotic) with heteroscedasticity correction, all with their corresponding p-value.
+#' Lasso selections are also given if `store_selections = TRUE` (`NULL` otherwise).
 #' @export
 #' @examples \dontrun{GCto = list(c("Var 1", "Var 2")); GCfrom = list(c("Var 3", "Var 4", "Var 5"))}
 #' \dontrun{HDGC_HVAR_multiple_pairs(sample_RV,GCto,GCfrom, log=TRUE)}
@@ -20,7 +23,8 @@
 #' @references  Corsi, Fulvio. "A simple approximate long-memory model of realized volatility." Journal of Financial Econometrics 7.2 (2009): 174-196.
 HDGC_HVAR_multiple_pairs <- function(data, GCpairs = NULL, GCto = NULL, GCfrom = NULL, log=TRUE,
                                      bound = 0.5 * nrow(data),
-                                     parallel = FALSE, n_cores = NULL) {
+                                     parallel = FALSE, n_cores = NULL,
+                                     progress_bar = TRUE, store_selections = FALSE) {
 
   varnames <- colnames(data)
   K <- ncol(data)
@@ -41,15 +45,8 @@ HDGC_HVAR_multiple_pairs <- function(data, GCpairs = NULL, GCto = NULL, GCfrom =
     }
   }
   GC_all_pairs <- HDGC_HVAR_multiple(data = data, GCpairs = GCpairs, log=log, bound = bound,
-                                     parallel = parallel, n_cores = n_cores)
+                                     parallel = parallel, n_cores = n_cores,
+                                     progress_bar = progress_bar, store_selections = store_selections)
 
-  # GC_matrix <- array(dim = c(K, K, 2, 3))
-  # dimnames(GC_matrix) <- list(GCto = varnames, GCfrom = varnames,
-  #                             stat = c("LM_stat", "p_value"), type = c("Asymp", "FS_cor", "Asymp_Robust"))
-  # for (i in 1:length(GCpairs)) {
-  #   ind_to <- which(varnames %in% GCpairs[[i]]$GCto)
-  #   ind_from <- which(varnames %in% GCpairs[[i]]$GCfrom)
-  #   GC_matrix[ind_to, ind_from, , ] <- GC_all_pairs$tests[, , i]
-  # }
   return(list(tests = GC_all_pairs$tests, selections = GC_all_pairs$selections))
 }

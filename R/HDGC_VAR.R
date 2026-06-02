@@ -7,8 +7,10 @@
 #' @param  bound      lower bound on tuning parameter lambda
 #' @param  parallel   TRUE for parallel computing
 #' @param  n_cores    nr of cores to use in parallel computing, default is all but one
-#' @return            LM Chi-square test statistics (asymptotic), LM F-stat with finite sample correction, both with their corresponding p-value.
-#' Lasso selections are also printed to the console.
+#' @param store_selections store the lasso-selected variables, default is true
+#'
+#' @return            LM Chi-square test statistic (asymptotic) and LM F-stat with finite sample correction, with their corresponding p-value.
+#' Lasso selections are also given if `store_selections = TRUE` (`NULL` otherwise).
 #' @export
 #' @importFrom parallel makeCluster clusterSetRNGStream clusterExport clusterEvalQ detectCores parSapply stopCluster parLapply
 #' @importFrom stats cor
@@ -16,7 +18,7 @@
 #' @references Hecq, A., Margaritella, L., Smeekes, S., "Inference in Non Stationary High Dimensional VARs" (2020, check the latest version at https://sites.google.com/view/luca-margaritella )
 #' @references Hecq, A., Margaritella, L., Smeekes, S., "Granger Causality Testing in High-Dimensional VARs: a Post-Double-Selection Procedure." arXiv preprint arXiv:1902.10991 (2019).
 HDGC_VAR <- function(GCpair, data, p = 1, d = 0, bound = 0.5 * nrow(data),
-                     parallel = FALSE, n_cores = NULL) {
+                     parallel = FALSE, n_cores = NULL, store_selections = TRUE) {
   GCto <- GCpair$GCto #Granger-caused variable
   GCfrom <- GCpair$GCfrom #Granger-causing
   data<-as.matrix(data)
@@ -130,5 +132,10 @@ HDGC_VAR <- function(GCpair, data, p = 1, d = 0, bound = 0.5 * nrow(data),
 
   # Perform LM test
   LM_out <- LM_test(y_I, diag(I) %x% X_GC, Zx_sel, I) #dep variable, Granger causing original p lags, selected variables
+  if (store_selections) {
+    select_out <- lasso_sel
+  } else {
+    select_out <- NULL
+  }
   return(list(tests = LM_out, selections = lasso_sel))
 }

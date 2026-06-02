@@ -9,8 +9,10 @@
 #' @param  parallel   TRUE for parallel computing
 #' @param  n_cores    nr of cores to use in parallel computing, default is all but one
 #' @param progress_bar display a progress bar, default is true
-#' @return            LM Chi-square test statistics (asymptotic), LM F-stat with finite sample correction, both with their corresponding p-value.
-#' Lasso selections are also printed to the console.
+#' @param store_selections store the lasso-selected variables, default is false (object can become huge in large systems)
+#'
+#' @return            LM Chi-square test statistics (asymptotic) and LM F-stats with finite sample correction, with their corresponding p-value.
+#' Lasso selections are also given if `store_selections = TRUE` (`NULL` otherwise).
 #' @export
 #' @importFrom parallel makeCluster clusterSetRNGStream clusterExport clusterEvalQ detectCores parSapply stopCluster parLapply
 #' @examples \dontrun{GC=list(list("GCto"="Var 1","GCfrom"="Var 2"),list("GCto"="Var 2","GCfrom"="Var 3"))}
@@ -18,7 +20,8 @@
 #' @references Hecq, A., Margaritella, L., Smeekes, S., "Inference in Non Stationary High Dimensional VARs" (2020, check the latest version at https://sites.google.com/view/luca-margaritella )
 #' @references Hecq, A., Margaritella, L., Smeekes, S., "Granger Causality Testing in High-Dimensional VARs: a Post-Double-Selection Procedure." arXiv preprint arXiv:1902.10991 (2019).
 HDGC_VAR_multiple <- function(data, GCpairs, p = 1, d = 0, bound = 0.5 * nrow(data),
-                              parallel = FALSE, n_cores = NULL, progress_bar = TRUE) {
+                              parallel = FALSE, n_cores = NULL, progress_bar = TRUE,
+                              store_selections = FALSE) {
   if (progress_bar) {
     pbapply::pboptions(type = "txt")
   } else {
@@ -34,11 +37,11 @@ HDGC_VAR_multiple <- function(data, GCpairs, p = 1, d = 0, bound = 0.5 * nrow(da
     clusterEvalQ(cl = cl, library(glmnet))
 
     test_list <- pbapply::pblapply(GCpairs, HDGC_VAR, data = data, p = p, d = d, bound = bound,
-                           parallel = FALSE, cl = cl)
+                           parallel = FALSE, store_selections = store_selections, cl = cl)
     stopCluster(cl)
   } else {
     test_list <- pbapply::pblapply(GCpairs, HDGC_VAR, data = data, p = p, d = d, bound = bound,
-                        parallel = FALSE)
+                        parallel = FALSE, store_selections = store_selections)
   }
   out <- simplify_list(test_list, GCpairs)
   return(out)
