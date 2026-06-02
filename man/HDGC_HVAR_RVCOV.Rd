@@ -10,7 +10,8 @@ HDGC_HVAR_RVCOV(
   realized_correlations,
   bound = 0.5 * nrow(realized_variances),
   parallel = FALSE,
-  n_cores = NULL
+  n_cores = NULL,
+  store_selections = TRUE
 )
 }
 \arguments{
@@ -25,10 +26,12 @@ HDGC_HVAR_RVCOV(
 \item{parallel}{TRUE for parallel computing}
 
 \item{n_cores}{nr of cores to use in parallel computing, default is all but one}
+
+\item{store_selections}{store the lasso-selected variables, default is true}
 }
 \value{
-LM Chi-square test statistics (asymptotic), LM F-stat with finite sample correction, LM Chi-square (asymptotic) with heteroscedasticity correction, all with their corresponding p-value.
-Lasso selections are also printed to the console.
+LM Chi-square test statistic (asymptotic), LM F-stat with finite sample correction, LM Chi-square (asymptotic) with heteroscedasticity correction, all with their corresponding p-value.
+Lasso selections are also given if `store_selections = TRUE` (`NULL` otherwise).
 }
 \description{
 Test Granger causality for Realized Volatilities in High Dimensional Heterogeneous VARs conditioning on Realized Correlations

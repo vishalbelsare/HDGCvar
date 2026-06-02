@@ -20,7 +20,7 @@ the diagonalized VAR are used to build the empirical covariance matrix and an ap
 its determinant that uses the matrix trace is employed to be able to select p using Bayesian Information Criterion
 }
 \examples{
- lags_upbound_BIC(sample_dataset_I1, p_max=10)
+ \dontrun{lags_upbound_BIC(sample_dataset_I1, p_max=10)}
 }
 \references{
 Hecq, A., Margaritella, L., Smeekes, S., "Inference in Non Stationary High Dimensional VARs" (2020, check the latest version at https://sites.google.com/view/luca-margaritella )

@@ -12,7 +12,9 @@ HDGC_VAR_multiple_pairs_I0(
   p = 1,
   bound = 0.5 * nrow(data),
   parallel = FALSE,
-  n_cores = NULL
+  n_cores = NULL,
+  progress_bar = TRUE,
+  store_selections = FALSE
 )
 }
 \arguments{
@@ -32,9 +34,14 @@ The inner list contains the GCto and GCfrom vectors needed for \code{\link{HDGC_
 \item{parallel}{TRUE for parallel computing}
 
 \item{n_cores}{nr of cores to use in parallel computing, default is all but one}
+
+\item{progress_bar}{display a progress bar, default is true}
+
+\item{store_selections}{store the lasso-selected variables, default is false (object can become huge in large systems)}
 }
 \value{
-Granger causality matrix and Lasso selections are printed to the console
+LM Chi-square test statistics (asymptotic) and LM F-stats with finite sample correction, with their corresponding p-value.
+Lasso selections are also given if `store_selections = TRUE` (`NULL` otherwise).
 }
 \description{
 A wrapper around \code{\link{HDGC_VAR_multiple_I0}}. If GCpairs is used, the function is the same as \code{\link{HDGC_VAR_multiple_I0}}.

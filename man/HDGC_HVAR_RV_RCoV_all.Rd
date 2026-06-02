@@ -11,7 +11,9 @@ HDGC_HVAR_RV_RCoV_all(
   log = TRUE,
   bound = 0.5 * nrow(realized_variances),
   parallel = FALSE,
-  n_cores = NULL
+  n_cores = NULL,
+  progress_bar = TRUE,
+  store_selections = FALSE
 )
 }
 \arguments{
@@ -29,9 +31,14 @@ be (((ncol(realized_volatilities)^2)-ncol(realized_volatilities))/2)}
 \item{parallel}{TRUE for parallel computing}
 
 \item{n_cores}{Nr of cores to use in parallel computing, default is all but one}
+
+\item{progress_bar}{display a progress bar, default is true}
+
+\item{store_selections}{store the lasso-selected variables, default is false (object can become huge in large systems)}
 }
 \value{
-Granger causality matrix and Lasso selections are printed to the console
+LM Chi-square test statistics (asymptotic), LM F-stats with finite sample correction, LM Chi-square (asymptotic) with heteroscedasticity correction, all with their corresponding p-value.
+Lasso selections are also given if `store_selections = TRUE` (`NULL` otherwise).
 }
 \description{
 Networks of Realized Volatilities conditional on the set of Realized Correlations

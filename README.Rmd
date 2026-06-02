@@ -72,7 +72,7 @@ All these functions ask you as inputs:
 
 * `GCpair` or `GCpairs`, a list object explicitly containing the Granger caused variables "GCto" and the Granger causing "GCfrom".  
 * `data` , the dataset containing as columns all the time series you are modeling.  
-* `p = 1`, the lag-length of the VAR. Unless you want to explicitly impose it, you can use `HDGCvar::lags_upbound_BIC()` which estimates an empirical upper bound for the lag-length using Bayesian Information Criteria (for details see Hecq et al. 2019).  
+* `p = 1`, the lag-length of the VAR. Unless you want to explicitly impose it, you can use `HDGCvar::lags_upbound()` which estimates an empirical upper bound for the lag-length using Information Criteria (for details see Hecq et al. 2019).  
 * `bound = 0.5 * nrow(data)`, this is meant for applying a lower bound on the penalty parameter of the lasso. In simple words it means you are telling the lasso, in each equations it estimates, to please stop when it has reached an amount of selected (i.e. non-zero coefficient) variables corresponding to $50\%$ of the sample size. This is innocuous in small systems but quite important for systems where the number of variables per-equation (i.e. lags included) is larger than the sample size (for details see Hecq et al. 2019).  
 * `parallel = FALSE`, put equal to TRUE for parallel computing.  
 * `n_cores = NULL`, number of cores to use in parallel computing, default is all but one.  
@@ -89,7 +89,7 @@ A. Hecq, L. Margaritella, S.Smeekes (2020) extended the Post-double-selection Gr
 
 All these functions ask you the same inputs as reported above for `HDGC_VAR_I0` with the addition of the following:  
 
-* `d=2`, is the augmentation needed to handle the potentially non-stationary time series. It should correspond to the maximum suspected order of integration of your time series. This might sound vague but think about it: in economics you will hardly see a variable integrated of order two or three. Therefore, unless you are absolutely sure that your time series are at most integrated of order one and those not integrated have eigenvalues far from the unity or that for whatever unlikely reason you have at least one variable integrated of order three, I would recommend to put `d=2`. Be careful though: if the lag-length `p` that you are using is smaller or equal to `d`, `HDGC_VAR` will give you a warning: to avoid spurious regression issues in the post-double-selection step you need to ensure `p>=d+1`. This ulimnately means that if you want to be safeguarded from possible I(2) variables you will have to put `d=2` and at least `p=3`. In other words, even though `HDGCvar::lags_upbound_BIC()` might have estimated `p=2`, you still want to make it larger to avoid spurious results in the lasso selection.
+* `d=2`, is the augmentation needed to handle the potentially non-stationary time series. It should correspond to the maximum suspected order of integration of your time series. This might sound vague but think about it: in economics you will hardly see a variable integrated of order two or three. Therefore, unless you are absolutely sure that your time series are at most integrated of order one and those not integrated have eigenvalues far from the unity or that for whatever unlikely reason you have at least one variable integrated of order three, I would recommend to put `d=2`. Be careful though: if the lag-length `p` that you are using is smaller or equal to `d`, `HDGC_VAR` will give you a warning: to avoid spurious regression issues in the post-double-selection step you need to ensure `p>=d+1`. This ulimnately means that if you want to be safeguarded from possible I(2) variables you will have to put `d=2` and at least `p=3`. In other words, even though `HDGCvar::lags_upbound()` might have estimated `p=2`, you still want to make it larger to avoid spurious results in the lasso selection.
 
 
 
@@ -190,8 +190,8 @@ colnames(dataset)<-c(paste(rep("Var",20),1:20))
 #Let us plot the time series to get a feeling of what kind of data we are dealing with
 ts.plot(dataset)
 
-#Select the lag-length of the VAR using HDGCvar::lags_upbound_BIC
-selected_lag<-lags_upbound_BIC(dataset,p_max=10)
+#Select the lag-length of the VAR using HDGCvar::lags_upbound
+selected_lag<-lags_upbound(dataset,p_max=10)
 print(selected_lag)
 #Note: hooray! the selected lag is p=2 which it is correct given our simulated data! Of course in practice we could not know this.
 
@@ -251,12 +251,12 @@ Plot_GC_all(network, Stat_type="FS_cor",alpha=0.01, multip_corr=list(F),directed
 
 # After running HDGC_VAR with d=2, p=2, we got a warning which reads as follows: "To avoid spurious regression problems in the post-double-selection steps, unless you are certain that your series are maximum I(1), you might want to increase the lag-length p to be larger than d".
 
-#Note that in this case we know that no spurious regression occurred as the series are maximum I(1) by construction and the estimated lag with lags_upbound_BIC() is p=2 so the use of d=2 is purely for statistical reasons.
+#Note that in this case we know that no spurious regression occurred as the series are maximum I(1) by construction and the estimated lag with lags_upbound() is p=2 so the use of d=2 is purely for statistical reasons.
 
 #To understand this last point, it is perhaps easier to make a small toy-example: consider a trivariate system with variables y_t, x_t, z_t and suppose we are interested in testing Granger causality from x_t to y_t. 
 
 #Suppose also that we would believe the time series in our dataset to be maximum I(1) and we ignore the recommendation of setting d=2 and hence we would set d=1. 
-#Then, suppose further that either estimating the lag-length using lags_upbound_BIC() or by following a fishy oracle we would get/inpute p=1.
+#Then, suppose further that either estimating the lag-length using lags_upbound() or by following a fishy oracle we would get/inpute p=1.
 
 #The post-double-selection procedure will consist of p+1 steps of lasso regressions:
 # 1) y_t on y_{t-1}+x_{t-1}+z_{t-1}

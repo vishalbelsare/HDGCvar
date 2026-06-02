@@ -11,7 +11,8 @@ HDGC_VAR(
   d = 0,
   bound = 0.5 * nrow(data),
   parallel = FALSE,
-  n_cores = NULL
+  n_cores = NULL,
+  store_selections = TRUE
 )
 }
 \arguments{
@@ -28,10 +29,12 @@ HDGC_VAR(
 \item{parallel}{TRUE for parallel computing}
 
 \item{n_cores}{nr of cores to use in parallel computing, default is all but one}
+
+\item{store_selections}{store the lasso-selected variables, default is true}
 }
 \value{
-LM Chi-square test statistics (asymptotic), LM F-stat with finite sample correction, both with their corresponding p-value.
-Lasso selections are also printed to the console.
+LM Chi-square test statistic (asymptotic) and LM F-stat with finite sample correction, with their corresponding p-value.
+Lasso selections are also given if `store_selections = TRUE` (`NULL` otherwise).
 }
 \description{
 Test Granger causality in High Dimensional mixed Integrated and Cointegrated VARs
