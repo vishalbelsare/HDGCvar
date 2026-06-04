@@ -5,9 +5,9 @@
 
 <!-- badges: start -->
 
-[![CRAN\_Version\_Badge](http://www.r-pkg.org/badges/version/HDGCvar)](https://cran.r-project.org/package=HDGCvar)
-[![CRAN\_Downloads\_Badge](https://cranlogs.r-pkg.org/badges/grand-total/HDGCvar)](https://cran.r-project.org/package=HDGCvar)
-[![License\_GPLv3\_Badge](https://img.shields.io/badge/License-GPLv3-yellow.svg)](https://www.gnu.org/licenses/gpl-3.0.html)
+[![CRAN_Version_Badge](http://www.r-pkg.org/badges/version/HDGCvar)](https://cran.r-project.org/package=HDGCvar)
+[![CRAN_Downloads_Badge](https://cranlogs.r-pkg.org/badges/grand-total/HDGCvar)](https://cran.r-project.org/package=HDGCvar)
+[![License_GPLv3_Badge](https://img.shields.io/badge/License-GPLv3-yellow.svg)](https://www.gnu.org/licenses/gpl-3.0.html)
 <!-- badges: end -->
 
 `HDGCvar` allows for testing Granger causality in High Dimensional
@@ -43,11 +43,11 @@ devtools::install_github("Marga8/HDGCvar")
 All the functions in `HDGCvar` are based on the following two papers:
 
 1.  A. Hecq, L. Margaritella, S.Smeekes, “Granger Causality Testing in
-    High Dimensional VARs: a Post Double Selection Procedure”(2019,
-    <https://arxiv.org/abs/1902.10991> )  
+    High Dimensional VARs: a Post Double Selection Procedure”(2021,
+    Journal of Financial Econometrics,
+    <https://academic.oup.com/jfec/article/21/3/915/6420401>)  
 2.  A. Hecq, L. Margaritella, S.Smeekes, “Inference in Non Stationary
-    High Dimensional VARs” (2020, check the latest version at
-    <https://sites.google.com/view/luca-margaritella> ).
+    High Dimensional VARs” (2023, <https://arxiv.org/abs/2302.01434>)
 
 ## Details
 
@@ -78,7 +78,7 @@ A. Hecq, L. Margaritella, S.Smeekes (2019), designed a Granger causality
 LM test for high-dimensional stationary vector autoregressive models
 (VAR) which combine dimensionality reduction techniques based on
 penalized regressions such as the lasso of Tibshirani (1996), with the
-post-double-selection procedure of Belloni et al. (2011) to select the
+post-double-selection procedure of Belloni et al. (2011) to select the
 set of relevant covariates in the system. The double selection step
 allows to substantially reduce the omitted variable bias and thereby
 allowing for valid post-selection inference on the parameters.
@@ -97,28 +97,28 @@ and use one of the following functions from `HDGCvar`:
 
 All these functions ask you as inputs:
 
-  - `GCpair` or `GCpairs`, a list object explicitly containing the
-    Granger caused variables “GCto” and the Granger causing “GCfrom”.  
-  - `data` , the dataset containing as columns all the time series you
-    are modeling.  
-  - `p = 1`, the lag-length of the VAR. Unless you want to explicitly
-    impose it, you can use `HDGCvar::lags_upbound_BIC()` which estimates
-    an empirical upper bound for the lag-length using Bayesian
-    Information Criteria (for details see Hecq et al. 2019).  
-  - `bound = 0.5 * nrow(data)`, this is meant for applying a lower bound
-    on the penalty parameter of the lasso. In simple words it means you
-    are telling the lasso, in each equations it estimates, to please
-    stop when it has reached an amount of selected (i.e. non-zero
-    coefficient) variables corresponding to \(50\%\) of the sample size.
-    This is innocuous in small systems but quite important for systems
-    where the number of variables per-equation (i.e. lags included) is
-    larger than the sample size (for details see Hecq et al. 2019).  
-  - `parallel = FALSE`, put equal to TRUE for parallel computing.  
-  - `n_cores = NULL`, number of cores to use in parallel computing,
-    default is all but one.
+- `GCpair` or `GCpairs`, a list object explicitly containing the Granger
+  caused variables “GCto” and the Granger causing “GCfrom”.  
+- `data` , the dataset containing as columns all the time series you are
+  modeling.  
+- `p = 1`, the lag-length of the VAR. Unless you want to explicitly
+  impose it, you can use `HDGCvar::lags_upbound()` which estimates an
+  empirical upper bound for the lag-length using Information Criteria
+  (for details see Hecq et al. 2019).  
+- `bound = 0.5 * nrow(data)`, this is meant for applying a lower bound
+  on the penalty parameter of the lasso. In simple words it means you
+  are telling the lasso, in each equations it estimates, to please stop
+  when it has reached an amount of selected (i.e. non-zero coefficient)
+  variables corresponding to $50\%$ of the sample size. This is
+  innocuous in small systems but quite important for systems where the
+  number of variables per-equation (i.e. lags included) is larger than
+  the sample size (for details see Hecq et al. 2019).  
+- `parallel = FALSE`, put equal to TRUE for parallel computing.  
+- `n_cores = NULL`, number of cores to use in parallel computing,
+  default is all but one.
 
 A. Hecq, L. Margaritella, S.Smeekes (2020) extended the
-Post-double-selection Granger causality LM test of Hecq et al. (2019) to
+Post-double-selection Granger causality LM test of Hecq et al. (2019) to
 the case in which your system might contain time series integrated of
 arbitrary orders and possibly even cointegrated. To accomplish this is
 necessary to simply augment the lags of the variables of interest by the
@@ -130,8 +130,8 @@ parameters.
 *Therefore: if you are NOT sure whether your time series are stationary,
 non-stationary, cointegrated, or an appropriate mix of the above or you
 do not trust the biased unit root and cointegration tests out there*, we
-got you covered\! you can go ahead and use one of the following
-functions from `HDGCvar`:
+got you covered! you can go ahead and use one of the following functions
+from `HDGCvar`:
 
 1.  `HDGC_VAR` which tests for Granger causality in High Dimensional
     Stationary/Non-Stationary/cointegrated or a mix of the above, VARs  
@@ -145,24 +145,23 @@ functions from `HDGCvar`:
 All these functions ask you the same inputs as reported above for
 `HDGC_VAR_I0` with the addition of the following:
 
-  - `d=2`, is the augmentation needed to handle the potentially
-    non-stationary time series. It should correspond to the maximum
-    suspected order of integration of your time series. This might sound
-    vague but think about it: in economics you will hardly see a
-    variable integrated of order two or three. Therefore, unless you are
-    absolutely sure that your time series are at most integrated of
-    order one and those not integrated have eigenvalues far from the
-    unity or that for whatever unlikely reason you have at least one
-    variable integrated of order three, I would recommend to put `d=2`.
-    Be careful though: if the lag-length `p` that you are using is
-    smaller or equal to `d`, `HDGC_VAR` will give you a warning: to
-    avoid spurious regression issues in the post-double-selection step
-    you need to ensure `p>=d+1`. This ulimnately means that if you want
-    to be safeguarded from possible I(2) variables you will have to put
-    `d=2` and at least `p=3`. In other words, even though
-    `HDGCvar::lags_upbound_BIC()` might have estimated `p=2`, you still
-    want to make it larger to avoid spurious results in the lasso
-    selection.
+- `d=2`, is the augmentation needed to handle the potentially
+  non-stationary time series. It should correspond to the maximum
+  suspected order of integration of your time series. This might sound
+  vague but think about it: in economics you will hardly see a variable
+  integrated of order two or three. Therefore, unless you are absolutely
+  sure that your time series are at most integrated of order one and
+  those not integrated have eigenvalues far from the unity or that for
+  whatever unlikely reason you have at least one variable integrated of
+  order three, I would recommend to put `d=2`. Be careful though: if the
+  lag-length `p` that you are using is smaller or equal to `d`,
+  `HDGC_VAR` will give you a warning: to avoid spurious regression
+  issues in the post-double-selection step you need to ensure `p>=d+1`.
+  This ulimnately means that if you want to be safeguarded from possible
+  I(2) variables you will have to put `d=2` and at least `p=3`. In other
+  words, even though `HDGCvar::lags_upbound()` might have estimated
+  `p=2`, you still want to make it larger to avoid spurious results in
+  the lasso selection.
 
 Back to A. Hecq, L. Margaritella, S.Smeekes (2019), in their empirical
 application they considered a specific case of stationary time series,
@@ -192,12 +191,12 @@ All these functions ask you the same inputs as reported above for
 series (recommended) and the exclusion of the lag-length parameter `p`
 as in a HVAR this is already pre-specified to be equal to 3, namely the
 daily, weekly, monthly aggregates of realized volatilities (for details
-see Corsi (2009) and Hecq et al. (2019)).
+see Corsi (2009) and Hecq et al. (2019)).
 
 Note: to account for the potential heteroskedasticity in the data, all
-these functions returns the Asymptotic χ\(^2\) version of the LM test
-(“Asymp”), the small sample correction F tests (“FS\_cor”) and the
-heteroskedasticity-robust Asymptotic χ\(^2\) (Asymp\_Robust).
+these functions returns the Asymptotic χ$^2$ version of the LM test
+(“Asymp”), the small sample correction F tests (“FS_cor”) and the
+heteroskedasticity-robust Asymptotic χ$^2$ (Asymp_Robust).
 
 It is not all: if you whish to condition your volatility spillover
 network on realized correlations you can also do so by using one of the
@@ -214,55 +213,55 @@ following function from `HDGCvar`:
 
 All these functions ask you the following inputs:
 
-  - `realized_variances`, matrix of realized variances.  
-  - `realized_covariances`, matrix of realized covariances.  
-  - `fisher_transf=TRUE`, to Fisher-transform the realized correlations.
-    It essentially calls the function `HDGCvar::Realized_corr()` which
-    calculates the realized correlations from the inputs
-    `realized_variances` and `realized_covariances` and Fisher-transform
-    them (for details see Hecq et al. (2019)).  
-  - `log=TRUE`, to log-transform the volatility series (recommended).  
-  - `bound = 0.5 * nrow(realized_variances)`, same as `bound = 0.5 *
-    nrow(data)`, see `HDGC_VAR_I0`.
-  - `parallel = FALSE`, put equal to TRUE for parallel computing.  
-  - `n_cores = NULL`, number of cores to use in parallel computing,
-    default is all but one.
+- `realized_variances`, matrix of realized variances.  
+- `realized_covariances`, matrix of realized covariances.  
+- `fisher_transf=TRUE`, to Fisher-transform the realized correlations.
+  It essentially calls the function `HDGCvar::Realized_corr()` which
+  calculates the realized correlations from the inputs
+  `realized_variances` and `realized_covariances` and Fisher-transform
+  them (for details see Hecq et al. (2019)).  
+- `log=TRUE`, to log-transform the volatility series (recommended).  
+- `bound = 0.5 * nrow(realized_variances)`, same as
+  `bound = 0.5 * nrow(data)`, see `HDGC_VAR_I0`.
+- `parallel = FALSE`, put equal to TRUE for parallel computing.  
+- `n_cores = NULL`, number of cores to use in parallel computing,
+  default is all but one.
 
 In order to plot networks created via: `HDGC_VAR_all_I0`,
 `HDGC_VAR_all`, `HDGC_HVAR_all`, `HDGC_HVAR_RV_RCoV_all` you can use the
 function
 
-  - `Plot_GC_all`
+- `Plot_GC_all`
 
 This function takes as inputs:  
 \* `Comb`, stands for the result of one of the functions:
 `HDGC_VAR_all_I0`, `HDGC_VAR_all`, `HDGC_HVAR_all`,
 `HDGC_HVAR_RV_RCoV_all`  
-\* `Stat_type="FS_cor"`, the default is “FS\_cor” namely the small
-sample correction F test. Alternatively one can use “Asymp” for the
-asymptotic χ\(^2\) test or “Asymp\_Robust” for the
-heteroskedasticity-robust asymptotic χ\(^2\) test.  
+\* `Stat_type="FS_cor"`, the default is “FS_cor” namely the small sample
+correction F test. Alternatively one can use “Asymp” for the asymptotic
+χ$^2$ test or “Asymp_Robust” for the heteroskedasticity-robust
+asymptotic χ$^2$ test.  
 \* `alpha=0.01`, the desired probability of type one error, default is
 0.01.  
 \* `multip_corr`, a list A list: first element is logical, if TRUE a
 multiple testing correction using stats::p.adjust() is used. The second
 element of the list define the p.adjust.method=c(“holm”, “hochberg”,
 “hommel”, “bonferroni”, “BH”, “BY”,“fdr”, “none”)). If the second
-element gets the name “APF\_FDR” then APFr::apf\_fdr which uses
-empirical Bayes is called and a third and fourth elements in the
-mutip\_corr list are required: gamm=c(,,) requires a min, max and step
-length values to be set for the threshold on the p\_values,fdr.apf=c(,)
-requires one or two values: either (NULL,value) or (value,NULL) if one
-wants to have specified amount of average power (fdr) no matter fdr
-(average power). If both (value,value) are given, the calculated
-threshold will find the closest combination to both apf and fdr desired.
-The last element of the list is logical: verbose=TRUE if one wants to
-know how much apf/fdr the testing has.  
+element gets the name “APF_FDR” then APFr::apf_fdr which uses empirical
+Bayes is called and a third and fourth elements in the mutip_corr list
+are required: gamm=c(,,) requires a min, max and step length values to
+be set for the threshold on the p_values,fdr.apf=c(,) requires one or
+two values: either (NULL,value) or (value,NULL) if one wants to have
+specified amount of average power (fdr) no matter fdr (average power).
+If both (value,value) are given, the calculated threshold will find the
+closest combination to both apf and fdr desired. The last element of the
+list is logical: verbose=TRUE if one wants to know how much apf/fdr the
+testing has.  
 \* `...`, all parameters for the network plot: see example and igraph
 documentation.  
 \* `cluster`, a list: first element is logical, if TRUE a cluster plot
-using igraph::cluster\_edge\_betweenness() is plotted. Other elements
-are respectively: vertex.size, vertex.label.color,vertex.label.cex,
+using igraph::cluster_edge_betweenness() is plotted. Other elements are
+respectively: vertex.size, vertex.label.color,vertex.label.cex,
 vertex.label.dist, edge.curved (see igraph for details).
 
 ## Data
@@ -274,10 +273,10 @@ a nutshell, a stationary VAR(1) in first-differences, with 30 variables
 for 200 observations, is simulated in `sample_dataset_I0` and it is then
 reverted into a levels VAR(2) taking the inverse-differences in
 `sample_dataset_I1`. `sample_RV` contains 30 Realized Volatility time
-series of sample T=200 obtined by simulating 30 random instances from a
+series of sample T=200 obtained by simulating 30 random instances from a
 Heterogeneous Autoregressive (HAR) model with daily, weekly and monthly
-lags. The simulations are obtained using the “HARSimulate” function from
-the package “HARModel”. The value for the constant and the daily, weekly
+lags. The simulations are obtained using the `HARSimulate` function from
+the package `HARModel`. The value for the constant and the daily, weekly
 and monthly lags coefficients are respectively 0.01, 0.36 ,0.28 , 0.28
 and the standard deviation of the error term is 0.001.
 
@@ -342,12 +341,12 @@ colnames(dataset)<-c(paste(rep("Var",20),1:20))
 ts.plot(dataset)
 ```
 
-<img src="man/figures/README-example-1.png" width="100%" />
+<img src="man/figures/README-example-1.png" alt="" width="100%" />
 
 ``` r
 
-#Select the lag-length of the VAR using HDGCvar::lags_upbound_BIC
-selected_lag<-lags_upbound_BIC(dataset,p_max=10)
+#Select the lag-length of the VAR using HDGCvar::lags_upbound
+selected_lag<-lags_upbound(dataset,p_max=10)
 print(selected_lag)
 #> [1] 2
 #Note: hooray! the selected lag is p=2 which it is correct given our simulated data! Of course in practice we could not know this.
@@ -365,8 +364,8 @@ HDGC_VAR(GCpair=interest_variables, data=dataset, p = selected_lag, d = 2, bound
 #>             unless you are certain that your series are maximum I(1), you might want to consider increasing the lag length p to be larger than d
 #> $tests
 #>             Asymp    FS_cor
-#> LM_stat 2.1901403 0.8547127
-#> p_value 0.3345161 0.4295616
+#> LM_stat 2.2245113 0.8919124
+#> p_value 0.3288164 0.4141173
 #> 
 #> $selections
 #>  Var 1 l1  Var 2 l1  Var 3 l1  Var 4 l1  Var 6 l1  Var 7 l1  Var 8 l1  Var 9 l1 
@@ -425,15 +424,15 @@ HDGC_VAR_multiple(dataset, GCpairs=mult_interest_variables, p= selected_lag, d=2
 #> 
 #>          type
 #> stat          Asymp    FS_cor
-#>   LM_stat 0.6076704 0.2301010
-#>   p_value 0.7379825 0.7950274
+#>   LM_stat 0.8564206 0.3340397
+#>   p_value 0.6516743 0.7170851
 #> 
 #> , , GCtests = Var 16 -> Var 4
 #> 
 #>          type
 #> stat          Asymp    FS_cor
-#>   LM_stat 0.5822482 0.2355135
-#>   p_value 0.7474229 0.7907248
+#>   LM_stat 0.2839762 0.1174474
+#>   p_value 0.8676316 0.8893403
 #> 
 #> 
 #> $selections
@@ -469,20 +468,21 @@ network<-HDGC_VAR_all(dataset, p = selected_lag, d = 2, bound = 0.5 * nrow(datas
 #You can even do clustering of the connected series using the option cluster=list(T,5,"black",0.8,1,0).
 #This uses Newman-Girvan (2002) algorithm implemented in igraph and based on edge-betweenness.
 Plot_GC_all(network, Stat_type="FS_cor",alpha=0.01, multip_corr=list(F),directed=T, layout=layout.circle, main="Network",edge.arrow.size=.2,vertex.size=5, vertex.color=c("lightblue"), vertex.frame.color="blue",vertex.label.size=2,vertex.label.color="black",vertex.label.cex=0.6, vertex.label.dist=1, edge.curved=0,cluster=list(T,5,"black",0.8,1,0)) 
+#> Warning: Same attribute for columns and rows, row names are ignored
 ```
 
-<img src="man/figures/README-example-2.png" width="100%" /><img src="man/figures/README-example-3.png" width="100%" />
+<img src="man/figures/README-example-2.png" alt="" width="100%" /><img src="man/figures/README-example-3.png" alt="" width="100%" />
 
 ``` r
 
 # After running HDGC_VAR with d=2, p=2, we got a warning which reads as follows: "To avoid spurious regression problems in the post-double-selection steps, unless you are certain that your series are maximum I(1), you might want to increase the lag-length p to be larger than d".
 
-#Note that in this case we know that no spurious regression occurred as the series are maximum I(1) by construction and the estimated lag with lags_upbound_BIC() is p=2 so the use of d=2 is purely for statistical reasons.
+#Note that in this case we know that no spurious regression occurred as the series are maximum I(1) by construction and the estimated lag with lags_upbound() is p=2 so the use of d=2 is purely for statistical reasons.
 
 #To understand this last point, it is perhaps easier to make a small toy-example: consider a trivariate system with variables y_t, x_t, z_t and suppose we are interested in testing Granger causality from x_t to y_t. 
 
 #Suppose also that we would believe the time series in our dataset to be maximum I(1) and we ignore the recommendation of setting d=2 and hence we would set d=1. 
-#Then, suppose further that either estimating the lag-length using lags_upbound_BIC() or by following a fishy oracle we would get/inpute p=1.
+#Then, suppose further that either estimating the lag-length using lags_upbound() or by following a fishy oracle we would get/inpute p=1.
 
 #The post-double-selection procedure will consist of p+1 steps of lasso regressions:
 # 1) y_t on y_{t-1}+x_{t-1}+z_{t-1}
@@ -506,8 +506,8 @@ HDGC_VAR(GCpair=interest_variables, data=dataset, p = 3, d = 2, bound = 0.5 * nr
 #>                    Depending on how large is p, to avoid failure of OLS you might want to decrease the bound=0.5*nrow(data).
 #> $tests
 #>             Asymp    FS_cor
-#> LM_stat 1.7400091 0.4553387
-#> p_value 0.6280758 0.7143146
+#> LM_stat 1.8042520 0.4852418
+#> p_value 0.6140101 0.6935366
 #> 
 #> $selections
 #>  Var 1 l1  Var 2 l1  Var 3 l1  Var 4 l1  Var 6 l1  Var 7 l1  Var 8 l1  Var 9 l1 
@@ -531,23 +531,22 @@ HDGC_VAR(GCpair=interest_variables, data=dataset, p = 3, d = 2, bound = 0.5 * nr
 
 ## References
 
-  - Belloni, A., Chernozhukov, V., Hansen, C., “Inference on treatment
-    effects after selection among high-dimensional controls.” The Review
-    of Economic Studies 81.2 (2014): 608-650.
-  - Corsi, Fulvio. “A simple approximate long-memory model of realized
-    volatility.” Journal of Financial Econometrics 7.2 (2009): 174-196.
-  - Granger, Clive WJ. “Investigating causal relations by econometric
-    models and cross-spectral methods.” Econometrica: journal of the
-    Econometric Society (1969): 424-438.
-  - Hecq, A., Margaritella, L., Smeekes, S., “Inference in Non
-    Stationary High Dimensional VARs” (2020, check the latest version at
-    <https://sites.google.com/view/luca-margaritella> )
-  - Hecq, A., Margaritella, L., Smeekes, S., “Granger Causality Testing
-    in High-Dimensional VARs: a Post-Double-Selection Procedure.” arXiv
-    preprint arXiv:1902.10991 (2019).
-  - Newman, Mark EJ, and Michelle Girvan. “Finding and evaluating
-    community structure in networks.” Physical review E 69.2 (2004):
-    026113.
-  - Quatto, Piero, et al. “Brain networks construction using Bayes FDR
-    and average power function.” Statistical Methods in Medical Research
-    29.3 (2020): 866-878.
+- Belloni, A., Chernozhukov, V., Hansen, C., “Inference on treatment
+  effects after selection among high-dimensional controls.” The Review
+  of Economic Studies 81.2 (2014): 608-650.
+- Corsi, Fulvio. “A simple approximate long-memory model of realized
+  volatility.” Journal of Financial Econometrics 7.2 (2009): 174-196.
+- Granger, Clive WJ. “Investigating causal relations by econometric
+  models and cross-spectral methods.” Econometrica: journal of the
+  Econometric Society (1969): 424-438.
+- Hecq, A., Margaritella, L., Smeekes, S., “Inference in Non Stationary
+  High Dimensional VARs” arXiv preprint arXiv:1902.10991 (2019).
+- Hecq, A., Margaritella, L., Smeekes, S., “Granger Causality Testing in
+  High-Dimensional VARs: a Post-Double-Selection Procedure.” Journal of
+  Financial Econometrics 21.3 (2023): 915-958.
+- Newman, Mark EJ, and Michelle Girvan. “Finding and evaluating
+  community structure in networks.” Physical review E 69.2 (2004):
+  026113.
+- Quatto, Piero, et al. “Brain networks construction using Bayes FDR and
+  average power function.” Statistical Methods in Medical Research 29.3
+  (2020): 866-878.

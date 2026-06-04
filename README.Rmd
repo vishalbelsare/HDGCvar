@@ -46,9 +46,8 @@ devtools::install_github("Marga8/HDGCvar")
 
 All the functions in `HDGCvar` are based on the following two papers: 
 
-1. A. Hecq, L. Margaritella, S.Smeekes, "Granger Causality Testing in High Dimensional VARs: a Post Double Selection Procedure"(2019, https://arxiv.org/abs/1902.10991 )  
-2. A. Hecq, L. Margaritella, S.Smeekes, "Inference in Non Stationary High Dimensional VARs" (2020, check the latest version at https://sites.google.com/view/luca-margaritella ).
-
+1. A. Hecq, L. Margaritella, S.Smeekes, "Granger Causality Testing in High Dimensional VARs: a Post Double Selection Procedure"(2021, Journal of Financial Econometrics, https://academic.oup.com/jfec/article/21/3/915/6420401)  
+2. A. Hecq, L. Margaritella, S.Smeekes, "Inference in Non Stationary High Dimensional VARs" (2023, https://arxiv.org/abs/2302.01434)
 
 ## Details
 If the addition of variable X to the given information set &Omega; alters the conditional distribution of another variable Y, and both X and &Omega; are observed prior to Y, then X improves predictability of Y, and is said to *Granger cause* Y with respect to &Omega;.

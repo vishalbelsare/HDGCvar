@@ -42,7 +42,7 @@ Plot_GC_all<-function(Comb,Stat_type="FS_cor", alpha=0.01, multip_corr=list(F,"b
     input[input < alpha] <- 1 #put =1 values < alpha
     input[is.na(input)] <- 0 #put =0 the diagonal
     input[input != 1] <- 0 #put =0 values > alpha
-    network=graph_from_adjacency_matrix(input, mode='directed',diag=F,add.rownames = TRUE )
+    network=graph_from_adjacency_matrix(input, mode='directed',diag=F,add.rownames = "name" )
     V(network)$label = rownames(input)
   }
   if(multip_corr[[1]]==T){
@@ -59,7 +59,7 @@ Plot_GC_all<-function(Comb,Stat_type="FS_cor", alpha=0.01, multip_corr=list(F,"b
       input[input < alpha_threshold] <- 1 #put =1 values < alpha
       input[is.na(input)] <- 0 #put =0 the diagonal
       input[input != 1] <- 0 #put =0 values > alpha
-      network=graph_from_adjacency_matrix(input, mode='directed',diag=F,add.rownames = TRUE )
+      network=graph_from_adjacency_matrix(input, mode='directed',diag=F,add.rownames = "name" )
       V(network)$label = rownames(input)
     }
     else if (multip_corr[[2]]!="APF_FDR"){
@@ -70,7 +70,7 @@ Plot_GC_all<-function(Comb,Stat_type="FS_cor", alpha=0.01, multip_corr=list(F,"b
       adj_pval_mat[adj_pval_mat != 1] <- 0 #put =0 values > alpha
       rownames(adj_pval_mat)<-rownames(input)
       colnames(adj_pval_mat)<-colnames(input)
-      network=graph_from_adjacency_matrix(adj_pval_mat, mode='directed',diag=F,add.rownames = TRUE )
+      network=graph_from_adjacency_matrix(adj_pval_mat, mode='directed',diag=F,add.rownames = "name" )
       V(network)$label = rownames(adj_pval_mat)
     }
   }
