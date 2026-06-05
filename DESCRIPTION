@@ -1,7 +1,7 @@
 Package: HDGCvar
 Type: Package
 Title: Granger Causality Testing in High Dimensional Vector Autoregressive Models  
-Version: 0.2.0
+Version: 0.2.1
 Authors@R: c(
   person("Luca", "Margaritella", email = "luca.margaritella@gmail.com", role = c("aut","cre")),
   person("Stephan", "Smeekes", email="s.smeekes@maastrichtuniversity.nl", role="aut"))
